@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://scene.gdns" type="Script" id=1]
 [ext_resource path="res://fps_counter.tscn" type="PackedScene" id=2]
@@ -95,6 +95,22 @@ _sections_unfolded = [ "Resource" ]
 
 custom_solver_bias = 0.0
 extents = Vector2( 22, 54 )
+_sections_unfolded = [ "Resource" ]
+
+[sub_resource type="ShaderMaterial" id=6]
+
+render_priority = 0
+
+[sub_resource type="CanvasItemMaterial" id=7]
+
+render_priority = 0
+blend_mode = 0
+light_mode = 0
+
+[sub_resource type="RectangleShape2D" id=8]
+
+custom_solver_bias = 0.0
+extents = Vector2( 1, 1 )
 _sections_unfolded = [ "Resource" ]
 
 [node name="Node" type="Node" index="0"]
@@ -251,5 +267,53 @@ _sections_unfolded = [ "Material", "Transform", "Visibility", "Z Index" ]
 
 shape = SubResource( 5 )
 _sections_unfolded = [ "Material", "Transform", "Visibility" ]
+
+[node name="RigidBody2D" type="RigidBody2D" parent="." index="8"]
+
+material = SubResource( 6 )
+position = Vector2( 139.574, 169.298 )
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+mode = 0
+mass = 1.0
+friction = 1.0
+bounce = 0.0
+gravity_scale = 0.0
+custom_integrator = false
+continuous_cd = 0
+contacts_reported = 0
+contact_monitor = false
+sleeping = false
+can_sleep = true
+linear_velocity = Vector2( 0, 0 )
+linear_damp = -1.0
+angular_velocity = 0.0
+angular_damp = -1.0
+_sections_unfolded = [ "Material", "Transform" ]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D" index="0"]
+
+material = SubResource( 7 )
+position = Vector2( 129.922, 245.995 )
+scale = Vector2( 33.4805, 62.4987 )
+shape = SubResource( 8 )
+_sections_unfolded = [ "Material", "Transform", "Z Index" ]
+
+[node name="Polygon2D" type="Polygon2D" parent="RigidBody2D/CollisionShape2D" index="0"]
+
+polygon = PoolVector2Array( -1, -1, -1, 1, 1, 1, 1, -1 )
+uv = PoolVector2Array( 0, 0, 1, 0, 1, 1, 0, 1 )
+color = Color( 1, 1, 1, 1 )
+vertex_colors = PoolColorArray(  )
+offset = Vector2( 0, 0 )
+antialiased = false
+texture = null
+texture_offset = Vector2( 0, 0 )
+texture_scale = Vector2( 1, 1 )
+texture_rotation_degrees = 0.0
+invert_enable = false
+invert_border = 100.0
+_sections_unfolded = [ "Invert", "Material", "Texture", "Transform", "Visibility", "Z Index" ]
 
 
