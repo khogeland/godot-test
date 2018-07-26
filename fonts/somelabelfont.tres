@@ -1,0 +1,13 @@
+[gd_resource type="DynamicFont" load_steps=2 format=2]
+
+[ext_resource path="res://fonts/somelabelfontdata.tres" type="DynamicFontData" id=1]
+
+[resource]
+
+resource_name = "SomeLabelFont"
+size = 53
+use_mipmaps = false
+use_filter = false
+font_data = ExtResource( 1 )
+_sections_unfolded = [ "Extra Spacing", "Font", "Resource", "Settings" ]
+
