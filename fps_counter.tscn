@@ -3,6 +3,8 @@
 [ext_resource path="res://fonts/Roboto/RobotoRegular.tres" type="DynamicFontData" id=1]
 [ext_resource path="res://scripts/FPSCounter.gdns" type="Script" id=2]
 
+
+
 [sub_resource type="DynamicFont" id=1]
 
 size = 40

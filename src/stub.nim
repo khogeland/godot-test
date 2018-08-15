@@ -12,3 +12,4 @@ import mainpanel
 import herosprite
 import myscene
 import hero
+import enemy

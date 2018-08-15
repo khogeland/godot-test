@@ -2,12 +2,12 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/2.tga-0ec8c38183448d0a18c065b4d3908be2.stex"
+path="res://.import/thebox.tga-95713b1d0a6b3dc81ff1fccb468d4a80.stex"
 
 [deps]
 
-source_file="res://sprites/hero/walk/2.tga"
-dest_files=[ "res://.import/2.tga-0ec8c38183448d0a18c065b4d3908be2.stex" ]
+source_file="res://sprites/maps/thebox/thebox.tga"
+dest_files=[ "res://.import/thebox.tga-95713b1d0a6b3dc81ff1fccb468d4a80.stex" ]
 
 [params]
 

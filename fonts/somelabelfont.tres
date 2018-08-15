@@ -2,6 +2,8 @@
 
 [ext_resource path="res://fonts/somelabelfontdata.tres" type="DynamicFontData" id=1]
 
+
+
 [resource]
 
 resource_name = "SomeLabelFont"

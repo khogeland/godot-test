@@ -2,6 +2,7 @@ import
   godot,
   engine,
   input,
+  viewport,
   canvas_item,
   animated_sprite,
   kinematic_body_2d
@@ -18,15 +19,16 @@ gdobj Hero of KinematicBody2D:
 
   var facingLeft = false
 
-  proc collide*() {.gdExport.} =
-    echo "collided"
-
   method ready*() =
     #self.connect(self, "")
     setProcess(true)
 
   method process*(delta: float64) =
     var velocity = vec2()
+
+    if isActionPressed("ui_left_click"):
+        velocity = getLocalMousePosition()
+        facingLeft = velocity.x < 0
 
     if isActionPressed("ui_right"):
       if isActionPressed("ui_left"):
@@ -68,4 +70,4 @@ gdobj Hero of KinematicBody2D:
     else:
       sprite.stop()
 
-    discard move_and_slide(velocity)
+    discard moveAndSlide(velocity)
