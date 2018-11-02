@@ -87,16 +87,22 @@ _sections_unfolded = [ "Pause" ]
 
 [node name="Label" parent="." index="0" instance=ExtResource( 2 )]
 
+margin_left = -515.0
+margin_top = 239.0
+margin_right = -349.0
+margin_bottom = 287.0
+_sections_unfolded = [ "Anchor", "Grow Direction", "Margin", "Visibility", "custom_colors", "custom_fonts" ]
+
 [node name="Delta" type="Label" parent="." index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 159.0
-margin_top = 388.0
-margin_right = 428.0
-margin_bottom = 561.0
+margin_left = 414.0
+margin_top = 308.0
+margin_right = 683.0
+margin_bottom = 481.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 2
@@ -124,18 +130,19 @@ _sections_unfolded = [ "Playback Options" ]
 
 [node name="Hero" type="KinematicBody2D" parent="." index="3"]
 
-editor/display_folded = true
 position = Vector2( 342.933, 249.523 )
 z_index = 100
 input_pickable = false
-collision_layer = 1
-collision_mask = 1
+collision_layer = 2
+collision_mask = 5
 collision/safe_margin = 0.08
 script = ExtResource( 5 )
-_sections_unfolded = [ "Collision", "Pickable", "Transform", "Z Index" ]
-speed = 100.0
-smooth_velocity_hardness = 17.0
+_sections_unfolded = [ "Collision", "Material", "Pickable", "Transform", "Visibility", "Z Index", "collision" ]
+player_speed = 20000.0
+smooth_velocity_hardness = 20.0
 click_speed_sec = 0.2
+shot_interval_sec = 0.2
+shot_color = Color( 0.289062, 0, 1, 1 )
 
 [node name="HeroSprite" type="AnimatedSprite" parent="Hero" index="0"]
 
@@ -168,14 +175,14 @@ smoothing_enabled = false
 smoothing_speed = 5.0
 offset_v = 0.0
 offset_h = 0.0
-drag_margin_left = 0.2
-drag_margin_top = 0.2
-drag_margin_right = 0.2
-drag_margin_bottom = 0.2
+drag_margin_left = 0.0
+drag_margin_top = 0.0
+drag_margin_right = 0.0
+drag_margin_bottom = 0.0
 editor_draw_screen = true
 editor_draw_limits = false
 editor_draw_drag_margin = false
-_sections_unfolded = [ "Limit" ]
+_sections_unfolded = [ "Drag Margin", "Editor", "Limit", "Material", "Offset", "Smoothing", "Transform", "Visibility", "Z Index" ]
 
 [node name="Jelly" type="KinematicBody2D" parent="." index="4"]
 
@@ -183,18 +190,17 @@ editor/display_folded = true
 position = Vector2( 377.975, 151.179 )
 z_index = 50
 input_pickable = true
-collision_layer = 1
-collision_mask = 1
+collision_layer = 4
+collision_mask = 7
 collision/safe_margin = 0.08
 script = ExtResource( 13 )
-_sections_unfolded = [ "Material", "Pickable", "Transform", "Z Index" ]
+_sections_unfolded = [ "Collision", "Material", "Pickable", "Transform", "Z Index" ]
 outline_material = ExtResource( 14 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Jelly" index="0"]
 
 frames = SubResource( 3 )
 animation = "default"
-frame = 1
 playing = true
 _sections_unfolded = [ "Material" ]
 
@@ -205,16 +211,15 @@ polygon = PoolVector2Array( 0.00161743, -15.3285, -14.5464, -7.58215, -14.5464, 
 
 [node name="Map" type="StaticBody2D" parent="." index="5"]
 
-editor/display_folded = true
 z_index = -100
 input_pickable = false
 collision_layer = 1
-collision_mask = 1
+collision_mask = 0
 constant_linear_velocity = Vector2( 0, 0 )
 constant_angular_velocity = 0.0
 friction = 1.0
 bounce = 0.0
-_sections_unfolded = [ "Z Index" ]
+_sections_unfolded = [ "Collision", "Z Index" ]
 
 [node name="Sprite" type="Sprite" parent="Map" index="0"]
 
@@ -226,7 +231,7 @@ _sections_unfolded = [ "Animation", "Transform" ]
 
 position = Vector2( -0.237823, -0.237823 )
 build_mode = 0
-polygon = PoolVector2Array( 246.573, 197.913, 258.94, 179.363, 348.838, 89.2265, 439.212, 180.552, 452.664, 194.607, 348.254, 297.468, 244.424, 193.832, 224.387, 225.787, 349.617, 330.145, 459.621, 196.163, 451.452, 96.5529, 343.478, 36.7154, 245.986, 91.2512 )
+polygon = PoolVector2Array( 221.044, 218.3, 258.94, 179.363, 348.838, 89.2265, 439.212, 180.552, 452.664, 194.607, 348.254, 297.468, 239.571, 184.281, 224.387, 225.787, 349.617, 330.145, 459.621, 196.163, 451.452, 96.5529, 343.478, 36.7154, 245.986, 91.2512 )
 
 [node name="Box" type="StaticBody2D" parent="." index="6"]
 

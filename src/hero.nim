@@ -2,19 +2,26 @@ import
   godot,
   times,
   engine,
+  colors,
   input,
+  camera_2d,
   viewport,
   canvas_item,
   animated_sprite,
   collision_shape_2d,
   rectangle_shape_2d,
+  packed_scene,
+  resource_loader,
+  bullet,
   kinematic_body_2d
 
 gdobj Hero of KinematicBody2D:
 
-  var speed* {.gdExport.} = 400.0
-  var smooth_velocity_hardness {.gdExport.} = 1.0
+  var playerSpeed* {.gdExport.} = 400.0
+  var smooth_velocity_hardness {.gdExport.} = 10.0
   var clickSpeedSec* {.gdExport.} = 0.1
+  var shotIntervalSec* {.gdExport.} = 0.2
+  var shotColor* {.gdExport.} = initColor(0.1, 0.1, 0.9)
 
   var prevVelocity = vec2()
 
@@ -27,10 +34,13 @@ gdobj Hero of KinematicBody2D:
   var lmbDownTime = 0.0
   var isClickMoving = false
   var clickPosition: Vector2 = nil
+  var originalPositionWhenClicked: Vector2 = nil
 
   var clickMarker: AnimatedSprite = nil
   var hitbox: CollisionShape2D = nil
   var feetOffset: Vector2 = nil
+
+  var shotTime = 0.0
 
   proc cancelClickMove() =
     isClickMoving = false
@@ -45,10 +55,16 @@ gdobj Hero of KinematicBody2D:
     setProcess(true)
 
   method process*(delta: float64) =
+    let currentTime = epochTime()
+
     var velocity = vec2()
 
     if isClickMoving:
       velocity = clickPosition - position()
+
+    if isActionPressed("ui_right_click") and shotTime + shotIntervalSec < currentTime:
+      shotTime = currentTime
+      shoot(getLocalMousePosition(), shotColor)
 
     if isActionPressed("ui_left_click"):
       cancelClickMove()
@@ -56,12 +72,13 @@ gdobj Hero of KinematicBody2D:
       facingLeft = velocity.x < 0
       if not lmbDown:
         lmbDown = true
-        lmbDownTime = epochTime()
+        lmbDownTime = currentTime
     else:
-      if lmbDownTime != 0.0 and epochTime() - lmbDownTime <= clickSpeedSec and lmbDown:
+      if lmbDownTime != 0.0 and currentTime - lmbDownTime <= clickSpeedSec and lmbDown:
         #echo lmbDownTime, " ", epochTime(), " ", epochTime() - lmbDownTime
         let mousePosition = getGlobalMousePosition()
         clickPosition = mousePosition - feetOffset
+        originalPositionWhenClicked = position()
         isClickMoving = true
         clickMarker.frame = 0
         clickMarker.play()
@@ -103,17 +120,20 @@ gdobj Hero of KinematicBody2D:
       heldUp = true
       velocity.y -= 1
 
-    velocity = lerp(prevVelocity, velocity.normalized() * speed, delta * smooth_velocity_hardness)
+    velocity = lerp(prevVelocity, velocity.normalized() * playerSpeed, smooth_velocity_hardness * delta)
     prevVelocity = velocity
 
     var sprite = getNode("HeroSprite") as AnimatedSprite
     sprite.flipH = facingLeft
-    if abs(velocity.y) + abs(velocity.x) > speed/10:
+    if velocity.length > playerSpeed/10:
       sprite.play()
     else:
-      cancelClickMove()
       sprite.stop()
 
-    discard moveAndSlide(velocity)
+    discard moveAndSlide(velocity * delta)
+    getNode("Camera2D").as(Camera2D).align()
+
+    if length(clickPosition - position()) < 10:
+      cancelClickMove()
     if getSlideCount() > 0:
       cancelClickMove()

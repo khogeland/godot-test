@@ -14,6 +14,11 @@ config/name="Godot-Nim Stub"
 run/main_scene="res://scene.tscn"
 config/icon="res://icon.png"
 
+[debug]
+
+settings/fps/force_fps=300
+settings/stdout/print_fps=true
+
 [gdnative]
 
 singletons=[  ]

@@ -4,8 +4,8 @@
 
 [resource]
 
-resource_name = "MyScene"
-class_name = "MyScene"
+resource_name = "Bullet"
+class_name = "Bullet"
 library = ExtResource( 1 )
 _sections_unfolded = [ "Resource" ]
 
