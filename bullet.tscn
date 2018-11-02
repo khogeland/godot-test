@@ -37,6 +37,8 @@ angular_velocity = 0.0
 angular_damp = -1.0
 script = ExtResource( 1 )
 _sections_unfolded = [ "Angular", "Applied Forces", "Collision", "Linear", "Pause", "Transform" ]
+hit_modulate = Color( 0.1, 0.1, 0.1, 1 )
+hit_decay_time_sec = 0.05
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="0"]
 

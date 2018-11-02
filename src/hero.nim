@@ -1,6 +1,7 @@
 import
   godot,
   times,
+  ticker,
   engine,
   colors,
   input,
@@ -8,6 +9,7 @@ import
   viewport,
   canvas_item,
   animated_sprite,
+  collision_layers,
   collision_shape_2d,
   rectangle_shape_2d,
   packed_scene,
@@ -22,6 +24,8 @@ gdobj Hero of KinematicBody2D:
   var clickSpeedSec* {.gdExport.} = 0.1
   var shotIntervalSec* {.gdExport.} = 0.2
   var shotColor* {.gdExport.} = initColor(0.1, 0.1, 0.9)
+
+  var shooter = initTicker()
 
   var prevVelocity = vec2()
 
@@ -39,8 +43,6 @@ gdobj Hero of KinematicBody2D:
   var clickMarker: AnimatedSprite = nil
   var hitbox: CollisionShape2D = nil
   var feetOffset: Vector2 = nil
-
-  var shotTime = 0.0
 
   proc cancelClickMove() =
     isClickMoving = false
@@ -62,9 +64,10 @@ gdobj Hero of KinematicBody2D:
     if isClickMoving:
       velocity = clickPosition - position()
 
-    if isActionPressed("ui_right_click") and shotTime + shotIntervalSec < currentTime:
-      shotTime = currentTime
-      shoot(getLocalMousePosition(), shotColor)
+    if isActionPressed("ui_right_click"):
+      shooter.tick(
+        proc() = self.shoot(self.getLocalMousePosition(), shotColor, 300.0, LAYER_ENEMY, LAYER_MAP_BACKGROUND),
+        shotIntervalSec) 
 
     if isActionPressed("ui_left_click"):
       cancelClickMove()

@@ -133,8 +133,8 @@ _sections_unfolded = [ "Playback Options" ]
 position = Vector2( 342.933, 249.523 )
 z_index = 100
 input_pickable = false
-collision_layer = 2
-collision_mask = 5
+collision_layer = 1
+collision_mask = 6
 collision/safe_margin = 0.08
 script = ExtResource( 5 )
 _sections_unfolded = [ "Collision", "Material", "Pickable", "Transform", "Visibility", "Z Index", "collision" ]
@@ -190,12 +190,13 @@ editor/display_folded = true
 position = Vector2( 377.975, 151.179 )
 z_index = 50
 input_pickable = true
-collision_layer = 4
+collision_layer = 2
 collision_mask = 7
 collision/safe_margin = 0.08
 script = ExtResource( 13 )
 _sections_unfolded = [ "Collision", "Material", "Pickable", "Transform", "Z Index" ]
 outline_material = ExtResource( 14 )
+fire_interval_sec = 1.0
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Jelly" index="0"]
 
@@ -213,7 +214,7 @@ polygon = PoolVector2Array( 0.00161743, -15.3285, -14.5464, -7.58215, -14.5464, 
 
 z_index = -100
 input_pickable = false
-collision_layer = 1
+collision_layer = 4
 collision_mask = 0
 constant_linear_velocity = Vector2( 0, 0 )
 constant_angular_velocity = 0.0

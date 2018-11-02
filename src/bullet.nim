@@ -2,6 +2,7 @@ import
   godot,
   engine,
   colors,
+  collision_layers,
   resource_loader,
   packed_scene,
   rigid_body_2d,
@@ -32,10 +33,11 @@ gdobj Bullet of RigidBody2D:
 
 
 
-proc shoot*(body: KinematicBody2D, direction: Vector2, color: godot.Color, speed: float = 300.0) =
+proc shoot*(body: KinematicBody2D, direction: Vector2, color: godot.Color, speed: float = 300.0, collisions: varargs[int]) =
   let bulletScn = load("res://bullet.tscn") as PackedScene # TODO: organization... this should be global... how?
   var bullet = bulletScn.instance() as Bullet
   let velocity = normalized(direction) * speed
+  bullet.as(PhysicsBody2D).addToCollisionMask(collisions)
   bullet.position = body.position
   bullet.linear_velocity = velocity
   bullet.getNode("Sprite").as(Sprite).modulate = color
