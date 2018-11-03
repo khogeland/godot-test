@@ -19,7 +19,7 @@ _sections_unfolded = [ "Resource" ]
 
 input_pickable = false
 collision_layer = 0
-collision_mask = 5
+collision_mask = 0
 mode = 0
 mass = 1.02041e-05
 friction = 1.0

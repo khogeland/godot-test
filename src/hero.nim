@@ -1,5 +1,6 @@
 import
   godot,
+  speedcore,
   times,
   ticker,
   engine,
@@ -7,23 +8,28 @@ import
   input,
   camera_2d,
   viewport,
+  label,
   canvas_item,
   animated_sprite,
-  collision_layers,
   collision_shape_2d,
   rectangle_shape_2d,
   packed_scene,
   resource_loader,
+  color_rect,
   bullet,
   kinematic_body_2d
 
-gdobj Hero of KinematicBody2D:
+gdobj Hero of HasHealthKinematicBody2D:
 
-  var playerSpeed* {.gdExport.} = 400.0
+  var playerSpeed* {.gdExport.} = 200.0
+  var damage* {.gdExport.}: int64 = 5
+  var initialMaxHealth* {.gdExport.} = 100
   var smooth_velocity_hardness {.gdExport.} = 10.0
   var clickSpeedSec* {.gdExport.} = 0.1
-  var shotIntervalSec* {.gdExport.} = 0.2
+  var shotIntervalSec* {.gdExport.} = 0.5
   var shotColor* {.gdExport.} = initColor(0.1, 0.1, 0.9)
+
+  var dead = false
 
   var shooter = initTicker()
 
@@ -44,19 +50,30 @@ gdobj Hero of KinematicBody2D:
   var hitbox: CollisionShape2D = nil
   var feetOffset: Vector2 = nil
 
-  proc cancelClickMove() =
-    isClickMoving = false
-    clickMarker.hide()
-
   method ready*() =
     #self.connect(self, "")
+    initHealthBar(initialMaxHealth)
+    #discard connect("damage", self, "hit", newArray())
     clickMarker = getNode("/root/Main/ClickMarker").as(AnimatedSprite)
     hitbox = getNode("CollisionShape2D").as(CollisionShape2D)
     let hitboxShape = hitbox.shape.as(RectangleShape2D)
     feetOffset = hitbox.position() + hitboxShape.extents * vec2(0.5, 1)
     setProcess(true)
 
+  proc cancelClickMove() =
+    isClickMoving = false
+    clickMarker.hide()
+
+  method onNoHealth() =
+    var sprite = getNode("HeroSprite") as AnimatedSprite
+    sprite.rotationDegrees = 180
+    var label = getNode("/root/Main/DeadLabel").as(Label)
+    label.rectPosition = position()
+    label.show()
+    dead = true
+
   method process*(delta: float64) =
+    if dead: return
     let currentTime = epochTime()
 
     var velocity = vec2()
@@ -66,7 +83,7 @@ gdobj Hero of KinematicBody2D:
 
     if isActionPressed("ui_right_click"):
       shooter.tick(
-        proc() = self.shoot(self.getLocalMousePosition(), shotColor, 300.0, LAYER_ENEMY, LAYER_MAP_BACKGROUND),
+        proc() = self.shoot(self.getLocalMousePosition(), damage, shotColor, 100.0, LAYER_ENEMY, LAYER_MAP_BACKGROUND),
         shotIntervalSec) 
 
     if isActionPressed("ui_left_click"):
@@ -133,7 +150,8 @@ gdobj Hero of KinematicBody2D:
     else:
       sprite.stop()
 
-    discard moveAndSlide(velocity * delta)
+    discard moveAndSlide(velocity)
+    maybeTakeDamage()
     getNode("Camera2D").as(Camera2D).align()
 
     if length(clickPosition - position()) < 10:

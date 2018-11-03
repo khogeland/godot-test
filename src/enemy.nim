@@ -1,5 +1,6 @@
 import
   godot,
+  speedcore,
   engine,
   kinematic_body_2d,
   hero,
@@ -8,18 +9,19 @@ import
   typetraits,
   material,
   ticker,
-  bullet,
   hero,
-  collision_layers,
   colors,
   viewport
 
-gdobj Enemy of KinematicBody2D:
+gdobj Enemy of HasHealthKinematicBody2D:
 
   var outlineMaterial* {.gdExport, hint: ResourceType.}: Material = nil   
   var fireIntervalSec* {.gdExport.} = 1.0
+  var damage* {.gdExport.}: int64 = 25
+  var initialMaxHealth* {.gdExport.}: int64 = 25
   var bulletColor* = initColor(0.9, 0.1, 0.1)
 
+  var dead = false
   var shouldBeOutlined = false
   var isOutlined = false
   var heroNode: Hero = nil 
@@ -42,16 +44,23 @@ gdobj Enemy of KinematicBody2D:
       #if cNo != nil and cNo.getChildCount > 0:
         #result &= getAllSprites(cNo)
 
+  method onNoHealth() =
+    var sprite = getNode("AnimatedSprite").as(AnimatedSprite)
+    sprite.rotationDegrees = 180
+    sprite.stop()
+    dead = true
+
   method ready*() =
     discard connect("mouse_entered", self, "outline_on")
     discard connect("mouse_exited", self, "outline_off")
     heroNode = self.getNode("/root/Main/Hero").as(Hero)
+    initHealthBar(initialMaxHealth)
     setProcess(true) 
 
   method process*(delta: float64) =
+    if dead: return
     shooter.tick(
-      #proc() = self.shoot(heroNode.position, bulletColor, LAYER_PLAYER, LAYER_MAP_BACKGROUND),
-      proc() = self.shoot(heroNode.position + heroNode.getNode("CollisionShape2D").as(CollisionShape2D).position - self.position, bulletColor),
+      proc() = self.shoot(heroNode.position + heroNode.getNode("CollisionShape2D").as(CollisionShape2D).position - self.position, damage, bulletColor, 100.0, LAYER_PLAYER, LAYER_MAP_BACKGROUND),
       fireIntervalSec) 
     var sprites = getAllSprites(self)
     for s in sprites:
