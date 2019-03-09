@@ -27,11 +27,19 @@ gdobj Hero of HasHealthKinematicBody2D:
   var smooth_velocity_hardness {.gdExport.} = 10.0
   var clickSpeedSec* {.gdExport.} = 0.1
   var shotIntervalSec* {.gdExport.} = 0.5
+  var dashIntervalSec* {.gdExport.} = 0.5
   var shotColor* {.gdExport.} = initColor(0.1, 0.1, 0.9)
+  var dashColor* {.gdExport.} = initColor(0.4, 0.4, 0.9)
+  var shotSpeed* {.gdExport.} = 100.0
+  var dashOffset* {.gdExport.} = 10.0
+  #var dashMultiplier* {.gdExport.} = 5.0
+  var dashSpeed* {.gdExport.} = 1000.0
 
   var dead = false
 
+  # TODO: ticker for abilities, maybe gcd a la WoW
   var shooter = initTicker()
+  var dasher = initTicker()
 
   var prevVelocity = vec2()
 
@@ -74,6 +82,7 @@ gdobj Hero of HasHealthKinematicBody2D:
 
   method process*(delta: float64) =
     if dead: return
+    var sprite = getNode("HeroSprite") as AnimatedSprite
     let currentTime = epochTime()
 
     var velocity = vec2()
@@ -81,20 +90,20 @@ gdobj Hero of HasHealthKinematicBody2D:
     if isClickMoving:
       velocity = clickPosition - position()
 
-    if isActionPressed("ui_right_click"):
-      shooter.tick(
-        proc() = self.shoot(self.getLocalMousePosition(), damage, shotColor, 100.0, LAYER_ENEMY, LAYER_MAP_BACKGROUND),
+    if isActionPressed("attack5"):
+      discard shooter.tick(
+        proc() = self.shoot(self.getLocalMousePosition(), damage, shotColor, shotSpeed, LAYER_ENEMY, LAYER_MAP_BACKGROUND),
         shotIntervalSec) 
 
     if isActionPressed("ui_left_click"):
       cancelClickMove()
       velocity = getLocalMousePosition()
-      facingLeft = velocity.x < 0
       if not lmbDown:
         lmbDown = true
         lmbDownTime = currentTime
     else:
       if lmbDownTime != 0.0 and currentTime - lmbDownTime <= clickSpeedSec and lmbDown:
+      #if lmbDown:
         #echo lmbDownTime, " ", epochTime(), " ", epochTime() - lmbDownTime
         let mousePosition = getGlobalMousePosition()
         clickPosition = mousePosition - feetOffset
@@ -106,44 +115,59 @@ gdobj Hero of HasHealthKinematicBody2D:
         clickMarker.show()
       lmbDown = false
 
-    if isActionPressed("ui_right"):
-      cancelClickMove()
-      if isActionPressed("ui_left"):
-        if heldLeft:
-          velocity.x = 1
-          facingLeft = false
-        else:
-          velocity.x = -1
-          facingLeft = true
-      else:
-        heldLeft = false
-        velocity.x += 1
-        facingLeft = false
-    elif isActionPressed("ui_left"):
-      cancelClickMove()
-      heldLeft = true
-      velocity.x -= 1
-      facingLeft = true
+    var dashing = false
+    if isActionPressed("attack2"):
+      if velocity.length == 0 or isClickMoving:
+        cancelClickMove()
+        velocity = getLocalMousePosition()
+      dashing = dasher.tick(
+        proc() = self.dash(velocity, dashOffset, dashColor),
+        shotIntervalSec)
+      
+    if not isClickMoving:
+      facingLeft = getLocalMousePosition().x < 0
 
-    if isActionPressed("ui_down"):
-      cancelClickMove()
-      if isActionPressed("ui_up"):
-        if heldUp:
-          velocity.y = 1
-        else:
-          velocity.y = -1
-      else:
-        heldUp = false
-        velocity.y += 1
-    elif isActionPressed("ui_up"):
-      cancelClickMove()
-      heldUp = true
-      velocity.y -= 1
+    #if isActionPressed("ui_right"):
+      #cancelClickMove()
+      #if isActionPressed("ui_left"):
+        #if heldLeft:
+          #velocity.x = 1
+          #facingLeft = false
+        #else:
+          #velocity.x = -1
+          #facingLeft = true
+      #else:
+        #heldLeft = false
+        #velocity.x += 1
+        #facingLeft = false
+    #elif isActionPressed("ui_left"):
+      #cancelClickMove()
+      #heldLeft = true
+      #velocity.x -= 1
+      #facingLeft = true
 
-    velocity = lerp(prevVelocity, velocity.normalized() * playerSpeed, smooth_velocity_hardness * delta)
+    #if isActionPressed("ui_down"):
+      #cancelClickMove()
+      #if isActionPressed("ui_up"):
+        #if heldUp:
+          #velocity.y = 1
+        #else:
+          #velocity.y = -1
+      #else:
+        #heldUp = false
+        #velocity.y += 1
+    #elif isActionPressed("ui_up"):
+      #cancelClickMove()
+      #heldUp = true
+      #velocity.y -= 1
+
+    velocity = if not dashing:
+      lerp(prevVelocity, velocity.normalized() * playerSpeed, smooth_velocity_hardness * delta)
+    else:
+      #velocity.normalized() * playerSpeed * dashMultiplier
+      velocity.normalized() * dashSpeed
     prevVelocity = velocity
 
-    var sprite = getNode("HeroSprite") as AnimatedSprite
     sprite.flipH = facingLeft
     if velocity.length > playerSpeed/10:
       sprite.play()

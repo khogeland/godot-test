@@ -1,12 +1,12 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://bullet.gdns" type="Script" id=1]
-[ext_resource path="res://sprites/bullet/bullet.png" type="Texture" id=2]
+[ext_resource path="res://sprites/bullet/bullet20.png" type="Texture" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
 
 custom_solver_bias = 0.0
-radius = 2.83203
+radius = 10.3086
 
 [sub_resource type="CanvasItemMaterial" id=2]
 
@@ -38,16 +38,17 @@ angular_damp = -1.0
 script = ExtResource( 1 )
 _sections_unfolded = [ "Angular", "Applied Forces", "Collision", "Linear", "Pause", "Transform" ]
 hit_modulate = Color( 0.1, 0.1, 0.1, 1 )
-hit_decay_time_sec = 0.05
+hit_decay_time_sec = 0.01
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="0"]
 
-position = Vector2( -0.449343, -0.496641 )
 shape = SubResource( 1 )
+_sections_unfolded = [ "Transform" ]
 
 [node name="Sprite" type="Sprite" parent="." index="1"]
 
 material = SubResource( 2 )
+position = Vector2( -0.0769424, 0 )
 texture = ExtResource( 2 )
 _sections_unfolded = [ "Animation", "Material", "Offset", "Region", "Transform", "Visibility", "Z Index" ]
 

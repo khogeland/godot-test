@@ -6,6 +6,7 @@ import
   rigid_body_2d,
   node,
   collision_object_2d,
+  collision_shape_2d,
   typetraits,
   sprite,
   times,
@@ -14,13 +15,14 @@ import
 gdobj Bullet of RigidBody2D:
   
   var hitModulate {.gdExport.} = initColor(0.1, 0.1, 0.1)
-  var hitDecayTimeSec {.gdExport.} = 0.05
+  var hitDecayTimeSec {.gdExport.} = 0.01
   var hitTime = 0.0
 
   proc collide*(body_id: int, body: CollisionObject2D, body_shape: int, local_shape: int) {.gdExport.} =
     if body of HasHealthKinematicBody2D:
       body.as(HasHealthKinematicBody2D).damage(getMeta("damage").asInt())
     hitTime = epochTime()
+    getNode("CollisionShape2D").as(CollisionShape2D).disabled = true
 
   method ready*() =
     discard connect("body_shape_entered", self, "collide", newArray())

@@ -19,7 +19,8 @@ gdobj Enemy of HasHealthKinematicBody2D:
   var fireIntervalSec* {.gdExport.} = 1.0
   var damage* {.gdExport.}: int64 = 25
   var initialMaxHealth* {.gdExport.}: int64 = 25
-  var bulletColor* = initColor(0.9, 0.1, 0.1)
+  var bulletColor* {.gdExport.} = initColor(0.9, 0.1, 0.1)
+  var shotSpeed* {.gdExport.} = 500.0
 
   var dead = false
   var shouldBeOutlined = false
@@ -59,8 +60,8 @@ gdobj Enemy of HasHealthKinematicBody2D:
 
   method process*(delta: float64) =
     if dead: return
-    shooter.tick(
-      proc() = self.shoot(heroNode.position + heroNode.getNode("CollisionShape2D").as(CollisionShape2D).position - self.position, damage, bulletColor, 100.0, LAYER_PLAYER, LAYER_MAP_BACKGROUND),
+    discard shooter.tick(
+      proc() = self.shoot(heroNode.position + heroNode.getNode("CollisionShape2D").as(CollisionShape2D).position - self.position, damage, bulletColor, shotSpeed, LAYER_PLAYER, LAYER_MAP_BACKGROUND),
       fireIntervalSec) 
     var sprites = getAllSprites(self)
     for s in sprites:

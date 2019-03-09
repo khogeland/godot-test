@@ -5,6 +5,7 @@ import
   collision_object_2d,
   rigid_body_2d,
   kinematic_body_2d,
+  animated_sprite,
   resource_loader,
   resource_loader,
   packed_scene,
@@ -71,4 +72,14 @@ proc shoot*(body: KinematicBody2D, direction: Vector2, strength: int64, color: g
   bullet.getNode("Sprite").as(Sprite).modulate = color
   bullet.setMeta("damage", newVariant(strength))
   body.getParent().addChild(bullet)
+
+proc dash*(body: KinematicBody2D, direction: Vector2, yOffset: float, color: godot.Color) =
+  let dashScn = load("res://dash.tscn") as PackedScene
+  var dash = dashScn.instance().as(AnimatedSprite)
+  dash.modulate = color #putting a comment here for the dumb stupid piece of shit plugin! fuck you and your buggy indentation how do you even fuck that up
+  dash.position = body.position + vec2(0, yOffset)
+  if direction.x < 0:
+    dash.scale = vec2(-1, 1)
+  dash.play()
+  body.getParent().addChild(dash)
 

@@ -137,6 +137,18 @@ collision_mask = 6
 collision/safe_margin = 0.08
 script = ExtResource( 5 )
 _sections_unfolded = [ "Collision", "Material", "Pickable", "Transform", "Visibility", "Z Index", "collision" ]
+player_speed = 100.0
+damage = 5
+initial_max_health = 100
+smooth_velocity_hardness = 10.0
+click_speed_sec = 0.1
+shot_interval_sec = 0.5
+dash_interval_sec = 0.5
+shot_color = Color( 0.1, 0.1, 0.9, 1 )
+dash_color = Color( 0.4, 0.4, 0.9, 1 )
+shot_speed = 200.0
+dash_offset = 14.0
+dash_speed = 1000.0
 
 [node name="HeroSprite" type="AnimatedSprite" parent="Hero" index="0"]
 
@@ -150,7 +162,7 @@ _sections_unfolded = [ "Material", "Transform", "Visibility", "Z Index" ]
 
 position = Vector2( 0, 8 )
 shape = SubResource( 2 )
-_sections_unfolded = [ "Transform" ]
+_sections_unfolded = [ "Material", "Pause", "Transform", "Visibility", "Z Index" ]
 
 [node name="Camera2D" type="Camera2D" parent="Hero" index="2"]
 
@@ -188,11 +200,18 @@ collision_mask = 7
 collision/safe_margin = 0.08
 script = ExtResource( 13 )
 _sections_unfolded = [ "Collision", "Material", "Pickable", "Transform", "Z Index" ]
+outline_material = null
+fire_interval_sec = 1.0
+damage = 25
+initial_max_health = 25
+bullet_color = Color( 0.9, 0.1, 0.1, 1 )
+shot_speed = 150.0
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Jelly" index="0"]
 
 frames = SubResource( 3 )
 animation = "default"
+frame = 1
 playing = true
 _sections_unfolded = [ "Material" ]
 
@@ -229,6 +248,7 @@ polygon = PoolVector2Array( 74.7273, 221.706, 121.33, 204.857, 348.838, 89.2265,
 
 material = SubResource( 4 )
 position = Vector2( 59.9636, 204.459 )
+z_index = -100
 input_pickable = false
 collision_layer = 1
 collision_mask = 1
@@ -236,7 +256,7 @@ constant_linear_velocity = Vector2( 0, 0 )
 constant_angular_velocity = 0.0
 friction = 1.0
 bounce = 0.0
-_sections_unfolded = [ "Collision", "Material", "Pickable", "Transform" ]
+_sections_unfolded = [ "Collision", "Material", "Pickable", "Transform", "Z Index" ]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Box" index="0"]
 
